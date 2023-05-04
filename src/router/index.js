@@ -25,10 +25,11 @@ import Layout from '@/layout'
   }
  */
 
+
+
+
 /**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
+ * 静态路由
  */
 export const constantRoutes = [
   {
@@ -51,8 +52,21 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '主页', icon: 'dashboard' }
     }]
+  },
+
+  {
+    path: '/codeEditor',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/codeEdit/index'),
+        meta: { title: '代码编辑与漏洞检测', icon: 'el-icon-s-help' }
+      }
+    ]
   },
 
   {
@@ -60,7 +74,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    meta: { title: '源代码漏洞检测', icon: 'el-icon-s-help' },
     children: [
       {
         path: 'table',
@@ -90,78 +104,31 @@ export const constantRoutes = [
     ]
   },
 
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+]
+// 动态路由，需要管理员权限
+export const asyncRouterMap = [
+  {
+    path: '/manage',
+    component: Layout,
+    name: 'manage',
+    meta: { title: '管理中心', icon: 'el-icon-s-help', breadcrumb: false, role: ['admin'] },
+    children: [
+      {
+        path: 'userManage',
+        name: 'userManage',
+        component: () => import('@/views/management/userManagement/index'),
+        meta: { title: '用户管理', icon: 'el-icon-user-solid', role: ['admin'] }
+      },
+      {
+        path: 'modelManage',
+        name: 'modelManage',
+        component: () => import('@/views/management/modelManagement/index'),
+        meta: { title: '模型管理', icon: 'el-icon-s-home', role: ['admin'] }
+      }
+    ]
+  },
 ]
 
 const createRouter = () => new Router({
